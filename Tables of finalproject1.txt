@@ -1,0 +1,481 @@
+********************************************************************
+			CREATE TABLES
+
+(Copy Paste in mysql to create tables)
+
+create database finalproject1;
+
+use finalproject1;
+
+
+ create table user(
+ user_name varchar(50) primary key,
+ user_emid varchar(50),
+ user_pwd char(32),
+ mob_no varchar(50),
+ user_status int
+ );
+
+
+ create table theatre(
+ th_id int primary key,
+ th_name varchar(50),
+ area varchar(50)
+ );
+
+
+ create table movie(
+ mov_id int primary key,
+ mov_name varchar(50),
+ descr varchar(50),
+ rating int,
+ synopsis varchar(200)
+ );
+
+
+ create table schedule(
+ sch_id int primary key,
+ th_id int,
+ mov_id int,
+ date date,
+ start time,
+ end time,
+ foreign key(th_id) references theatre(th_id)
+          on delete cascade
+          on update cascade,
+ foreign key(mov_id) references movie(mov_id)
+          on delete cascade
+          on update cascade
+ );
+
+
+ create table seat_list(
+ sch_id int,
+ row_no varchar(50),
+ col_no int,
+ status int,
+ primary key(sch_id,row_no,col_no),
+ foreign key(sch_id) references schedule(sch_id)
+          on delete cascade
+          on update cascade
+ );
+
+ create table payment(
+ p_id int primary key,
+ user_name varchar(50),
+ card_no varchar(50),
+ amount int,
+ foreign key(user_name) references user(user_name)
+          on delete cascade
+          on update cascade
+ );
+
+
+ create table reservation(
+ tckt_id int primary key,
+ sch_id int,
+ row_no varchar(50),
+ col_no int,
+ p_id int,
+ foreign key(sch_id) references schedule(sch_id)
+          on delete cascade
+          on update cascade,
+ foreign key(sch_id,row_no,col_no) references seat_list(sch_id,row_no,col_no)
+          on delete cascade
+          on update cascade,
+ foreign key(p_id) references payment(p_id)
+          on delete cascade
+          on update cascade
+ );
+
+
+ create table admin(
+ admin_name varchar(50) primary key,
+ admin_pwd char(32),
+ admin_status int
+ );
+
+
+**************************************************************************
+			SCHEMA (DESC TABLES)
+
+
+mysql> desc user;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| user_name   | varchar(50) | NO   | PRI | NULL    |       |
+| user_emid   | varchar(50) | YES  |     | NULL    |       |
+| user_pwd    | char(32)    | YES  |     | NULL    |       |
+| mob_no      | varchar(50) | YES  |     | NULL    |       |
+| user_status | int(11)     | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+5 rows in set (0.09 sec)
+
+mysql> desc theatre;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| th_id   | int(11)     | NO   | PRI | NULL    |       |
+| th_name | varchar(50) | YES  |     | NULL    |       |
+| area    | varchar(50) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.08 sec)
+
+mysql> desc movie;
++----------+--------------+------+-----+---------+-------+
+| Field    | Type         | Null | Key | Default | Extra |
++----------+--------------+------+-----+---------+-------+
+| mov_id   | int(11)      | NO   | PRI | NULL    |       |
+| mov_name | varchar(50)  | YES  |     | NULL    |       |
+| descr    | varchar(50)  | YES  |     | NULL    |       |
+| rating   | int(11)      | YES  |     | NULL    |       |
+| synopsis | varchar(200) | YES  |     | NULL    |       |
++----------+--------------+------+-----+---------+-------+
+5 rows in set (0.02 sec)
+
+mysql> desc schedule;
++--------+---------+------+-----+---------+-------+
+| Field  | Type    | Null | Key | Default | Extra |
++--------+---------+------+-----+---------+-------+
+| sch_id | int(11) | NO   | PRI | NULL    |       |
+| th_id  | int(11) | YES  | MUL | NULL    |       |
+| mov_id | int(11) | YES  | MUL | NULL    |       |
+| date   | date    | YES  |     | NULL    |       |
+| start  | time    | YES  |     | NULL    |       |
+| end    | time    | YES  |     | NULL    |       |
++--------+---------+------+-----+---------+-------+
+6 rows in set (0.07 sec)
+
+mysql> desc seat_list;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| sch_id | int(11)     | NO   | PRI | NULL    |       |
+| row_no | varchar(50) | NO   | PRI | NULL    |       |
+| col_no | int(11)     | NO   | PRI | NULL    |       |
+| status | int(11)     | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+4 rows in set (0.08 sec)
+
+mysql> desc payment;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| p_id      | int(11)     | NO   | PRI | NULL    |       |
+| user_name | varchar(50) | YES  | MUL | NULL    |       |
+| card_no   | varchar(50) | YES  |     | NULL    |       |
+| amount    | int(11)     | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> desc reservation;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| tckt_id | int(11)     | NO   | PRI | NULL    |       |
+| sch_id  | int(11)     | YES  | MUL | NULL    |       |
+| row_no  | varchar(50) | YES  |     | NULL    |       |
+| col_no  | int(11)     | YES  |     | NULL    |       |
+| p_id    | int(11)     | YES  | MUL | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+5 rows in set (0.06 sec)
+
+mysql> desc admin;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| admin_name   | varchar(50) | NO   | PRI | NULL    |       |
+| admin_pwd    | char(32)    | YES  |     | NULL    |       |
+| admin_status | int(11)     | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.12 sec)
+
+*****************************************************************************
+
+			TABLES with tuples inserted
+
+
+
+mysql> select * from user;
++-------------+------------------------+----------+------------+-------------+
+| user_name   | user_emid              | user_pwd | mob_no     | user_status |
++-------------+------------------------+----------+------------+-------------+
+| atul        | atul@gmail.com         | 123      | 1234567890 |           0 |
+| ibatulanand | ib.atulanand@gmail.com | 307012   | 9031806609 |           0 |
++-------------+------------------------+----------+------------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select * from admin;
++------------+-----------+--------------+
+| admin_name | admin_pwd | admin_status |
++------------+-----------+--------------+
+| atul       | 307012    |            0 |
+| himanshu   | 307002    |            0 |
+| nikhil     | 307016    |            0 |
+| swapnil    | 307017    |            0 |
++------------+-----------+--------------+
+
+
+mysql> select * from movie;
++--------+----------------+----------+--------+----------+
+| mov_id | mov_name       | descr    | rating | synopsis |
++--------+----------------+----------+--------+----------+
+|    101 | Transformers   | Action   |      5 | NULL     |
+|    102 | Batman         | Thriller |      4 | NULL     |
+|    103 | IT             | horror   |      3 | NULL     |
+|    104 | Newton         | Comedy   |      1 | NULL     |
+|    105 | Avengers2      | Thriller |      4 | NULL     |
+|    106 | Bossbaby       | Action   |      5 | NULL     |
+|    107 | Ironman        | Action   |      4 | NULL     |
+|    108 | Deadpool       | Comedy   |      5 | NULL     |
+|    109 | Superman       | Action   |      4 | NULL     |
+|    110 | Rio2           | Comedy   |      2 | NULL     |
+|    111 | Kungfu panda 3 | Comedy   |      4 | NULL     |
++--------+----------------+----------+--------+----------+
+11 rows in set (0.00 sec)
+
+mysql> select * from theatre;
++-------+------------+-------------+
+| th_id | th_name    | area        |
++-------+------------+-------------+
+|   201 | Inox       | Viman Nagar |
+|   202 | City Pride | Kothrud     |
++-------+------------+-------------+
+2 rows in set (0.00 sec)
+
+
+mysql> select * from schedule;
++--------+-------+--------+------------+----------+----------+
+| sch_id | th_id | mov_id | date       | start    | end      |
++--------+-------+--------+------------+----------+----------+
+|    301 |   201 |    101 | 2017-10-30 | 07:00:00 | 10:00:00 |
+|    302 |   201 |    101 | 2017-10-31 | 11:00:00 | 14:00:00 |
+|    303 |   201 |    108 | 2017-10-31 | 15:00:00 | 18:00:00 |
+|    304 |   201 |    110 | 2017-10-31 | 11:00:00 | 14:00:00 |
+|    305 |   201 |    105 | 2017-10-31 | 15:00:00 | 18:00:00 |
+|    306 |   202 |    106 | 2017-10-30 | 07:00:00 | 10:00:00 |
+|    307 |   202 |    102 | 2017-10-31 | 07:00:00 | 10:00:00 |
+|    308 |   202 |    106 | 2017-10-31 | 07:00:00 | 10:00:00 |
++--------+-------+--------+------------+----------+----------+
+8 rows in set (0.00 sec)
+
+
+*********Seat list will be generated by triggers**********
+
+********(You need not insert values into PAYMENT and RESERVATION table)*******
+
+mysql> select * from payment; 
++------+-------------+---------+--------+
+| p_id | user_name   | card_no | amount |
++------+-------------+---------+--------+
+| 1000 | ibatulanand | 12345   |    360 |
+| 1001 | ibatulanand | 123123  |    240 |
+| 1002 | ibatulanand | 999     |    240 |
+| 1003 | ibatulanand | 22222   |    240 |
+| 1004 | ibatulanand | 33333   |    240 |
+| 1005 | ibatulanand | 33333   |    240 |
+| 1006 | ibatulanand | 55555   |    360 |
+| 1007 | ibatulanand | 4444    |    240 |
+| 1008 | ibatulanand | 123123  |    360 |
+| 1009 | ibatulanand | 666     |    240 |
+| 1010 | ibatulanand | 910     |    240 |
+| 1011 | ibatulanand | 6767    |    240 |
+| 1012 | ibatulanand | 4545    |    240 |
+| 1013 | ibatulanand | 7878    |    240 |
+| 1014 | ibatulanand | 123456  |      0 |
+| 1015 | ibatulanand | 11122   |      0 |
+| 1016 | ibatulanand | 999     |      0 |
+| 1017 | ibatulanand | 123123  |      0 |
+| 1018 | ibatulanand | 111     |      0 |
+| 1019 | ibatulanand | 111     |      0 |
+| 1020 | ibatulanand | 123456  |    240 |
+| 1021 | ibatulanand | 12312   |    360 |
+| 1022 | atul        | 9999    |    360 |
++------+-------------+---------+--------+
+23 rows in set (0.00 sec)
+
+mysql> select * from reservation;
++---------+--------+--------+--------+------+
+| tckt_id | sch_id | row_no | col_no | p_id |
++---------+--------+--------+--------+------+
+|    2000 |    301 | B      |      3 | 1000 |
+|    2001 |    301 | B      |      4 | 1000 |
+|    2002 |    301 | B      |      5 | 1000 |
+|    2003 |    301 | B      |      6 | 1001 |
+|    2004 |    301 | B      |      7 | 1001 |
+|    2005 |    301 | C      |      1 | 1002 |
+|    2006 |    301 | C      |      2 | 1002 |
+|    2007 |    301 | A      |      4 | 1003 |
+|    2008 |    301 | A      |      9 | 1003 |
+|    2009 |    301 | B      |      8 | 1004 |
+|    2010 |    301 | B      |      9 | 1004 |
+|    2011 |    301 | B      |     10 | 1005 |
+|    2012 |    301 | C      |      3 | 1005 |
+|    2013 |    301 | C      |      4 | 1006 |
+|    2014 |    301 | C      |      5 | 1006 |
+|    2015 |    301 | C      |      6 | 1006 |
+|    2016 |    301 | C      |      8 | 1007 |
+|    2017 |    301 | C      |      9 | 1007 |
+|    2018 |    301 | D      |      1 | 1008 |
+|    2019 |    301 | D      |      2 | 1008 |
+|    2020 |    301 | D      |      3 | 1008 |
+|    2021 |    301 | D      |      1 | 1009 |
+|    2022 |    301 | D      |      2 | 1009 |
+|    2023 |    301 | C      |      9 | 1010 |
+|    2024 |    301 | C      |     10 | 1010 |
+|    2025 |    301 | D      |      6 | 1011 |
+|    2026 |    301 | D      |      7 | 1011 |
+|    2027 |    301 | D      |      4 | 1012 |
+|    2028 |    301 | D      |      5 | 1012 |
+|    2029 |    301 | C      |      7 | 1013 |
+|    2030 |    301 | C      |      8 | 1013 |
+|    2031 |    301 | D      |      9 | 1020 |
+|    2032 |    301 | D      |     10 | 1020 |
+|    2033 |    301 | B      |      1 | 1021 |
+|    2034 |    301 | C      |      1 | 1021 |
+|    2035 |    302 | B      |      1 | 1021 |
+|    2036 |    302 | C      |      1 | 1021 |
+|    2037 |    303 | B      |      1 | 1021 |
+|    2038 |    303 | C      |      1 | 1021 |
+|    2039 |    304 | B      |      1 | 1021 |
+|    2040 |    304 | C      |      1 | 1021 |
+|    2041 |    305 | B      |      1 | 1021 |
+|    2042 |    305 | C      |      1 | 1021 |
+|    2043 |    306 | A      |      1 | 1021 |
+|    2044 |    306 | B      |      1 | 1021 |
+|    2045 |    306 | C      |      1 | 1021 |
+|    2046 |    301 | B      |      2 | 1022 |
+|    2047 |    301 | B      |      3 | 1022 |
+|    2048 |    301 | B      |      4 | 1022 |
+|    2049 |    301 | B      |      7 | 1022 |
+|    2050 |    301 | B      |      8 | 1022 |
+|    2051 |    301 | B      |     10 | 1022 |
+|    2052 |    301 | C      |      2 | 1022 |
+|    2053 |    301 | C      |      3 | 1022 |
+|    2054 |    302 | B      |      2 | 1022 |
+|    2055 |    302 | B      |      3 | 1022 |
+|    2056 |    302 | B      |      4 | 1022 |
+|    2057 |    302 | B      |      7 | 1022 |
+|    2058 |    302 | B      |      8 | 1022 |
+|    2059 |    302 | B      |     10 | 1022 |
+|    2060 |    302 | C      |      2 | 1022 |
+|    2061 |    302 | C      |      3 | 1022 |
+|    2062 |    303 | B      |      2 | 1022 |
+|    2063 |    303 | B      |      3 | 1022 |
+|    2064 |    303 | B      |      4 | 1022 |
+|    2065 |    303 | B      |      7 | 1022 |
+|    2066 |    303 | B      |      8 | 1022 |
+|    2067 |    303 | B      |     10 | 1022 |
+|    2068 |    303 | C      |      2 | 1022 |
+|    2069 |    303 | C      |      3 | 1022 |
+|    2070 |    304 | B      |      2 | 1022 |
+|    2071 |    304 | B      |      3 | 1022 |
+|    2072 |    304 | B      |      4 | 1022 |
+|    2073 |    304 | B      |      7 | 1022 |
+|    2074 |    304 | B      |      8 | 1022 |
+|    2075 |    304 | B      |     10 | 1022 |
+|    2076 |    304 | C      |      2 | 1022 |
+|    2077 |    304 | C      |      3 | 1022 |
+|    2078 |    305 | B      |      2 | 1022 |
+|    2079 |    305 | B      |      3 | 1022 |
+|    2080 |    305 | B      |      4 | 1022 |
+|    2081 |    305 | B      |      7 | 1022 |
+|    2082 |    305 | B      |      8 | 1022 |
+|    2083 |    305 | B      |     10 | 1022 |
+|    2084 |    305 | C      |      2 | 1022 |
+|    2085 |    305 | C      |      3 | 1022 |
+|    2086 |    306 | A      |      8 | 1022 |
+|    2087 |    306 | A      |      9 | 1022 |
+|    2088 |    306 | A      |     10 | 1022 |
+|    2089 |    306 | B      |      2 | 1022 |
+|    2090 |    306 | B      |      3 | 1022 |
+|    2091 |    306 | B      |      4 | 1022 |
+|    2092 |    306 | B      |      7 | 1022 |
+|    2093 |    306 | B      |      8 | 1022 |
+|    2094 |    306 | B      |     10 | 1022 |
+|    2095 |    306 | C      |      2 | 1022 |
+|    2096 |    306 | C      |      3 | 1022 |
+|    2097 |    307 | B      |      2 | 1022 |
+|    2098 |    307 | B      |      3 | 1022 |
+|    2099 |    307 | B      |      4 | 1022 |
+|    2100 |    307 | B      |      7 | 1022 |
+|    2101 |    307 | B      |      8 | 1022 |
+|    2102 |    307 | B      |     10 | 1022 |
+|    2103 |    307 | C      |      2 | 1022 |
+|    2104 |    307 | C      |      3 | 1022 |
++---------+--------+--------+--------+------+
+105 rows in set (0.00 sec)
+
+
+
+**********************************************************************
+			TRIGGERS
+(Copy paste in mysql)
+(after delimiter //)
+
+*************** final  for insert *****************
+
+
+
+create trigger seat_trigger
+after insert on schedule
+for each row
+begin
+  declare count,i,j,k,l int;
+  set count=1;
+  set i=1;
+  set j=1;
+  set k=1;
+  set l=1;
+  while count<41
+  do
+          if count<11 then
+                  if i<11 then
+                          insert into seat_list values(new.sch_id,'A',i,0);
+                          set i=i+1;
+                  end if;
+          elseif count<21 then
+                  if j<11 then
+                          insert into seat_list values(new.sch_id,'B',j,0);
+                          set j=j+1;
+                  end if;
+          elseif count<31 then
+                  if k<11 then
+                          insert into seat_list values(new.sch_id,'C',k,0);
+                          set k=k+1;
+                  end if;
+          elseif count<41 then
+                 if l<11 then
+                          insert into seat_list values(new.sch_id,'D',l,0);
+                          set l=l+1;
+                  end if;
+          end if;
+          set count=count+1;
+  end while;
+ end;
+//
+
+---------------------------------------------------------------------------------------------------------------------------------
+*************** final  for delete *****************
+
+create trigger seat_trigger_delete
+before delete on schedule
+for each row
+begin
+  delete from seat_list where sch_id=old.sch_id;
+end;
+//
+
+---------------------------------------------------------------------------------------------------------------------------------
+*************** final  for update *****************
+
+create trigger seat_trigger_update
+before update on schedule
+for each row
+begin
+ update seat_list set sch_id=new.sch_id where sch_id=old.sch_id;
+end;
+//
+
+******************************************************************************************
