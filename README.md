@@ -1,2 +1,3 @@
 # TICKETONIC
 Online Movie Ticket Booking System JDBC application
+Our project basically manages the ticket booking process of theatres, providing an interface to the user to book movie tickets in a more easy way. At the front end we have used JAVA (JDK) and at the back end My SQL server. The project proceeds through a sequence of well-designed forms provided with validations to ensure consistency, reliability and most importantly correctness of information fed into the database. The other important objective of this program is to track all account details particularly no of tickets sold for each show in each theater.
